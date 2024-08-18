@@ -1,0 +1,22 @@
+{
+    "name": "Ubuntu 20.04 PCL - Dev Container",
+    "image": "ubuntu-focal-pcl-workspace",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "bash"
+            },
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools"
+            ]
+        }
+    },
+    "postStartCommand": "bash",
+    "remoteUser": "user",
+    "runArgs": [
+        "-e", "DISPLAY=host.docker.internal:0.0",
+        "--rm",
+        "--name", "ubuntu-focal-pcl"
+    ]
+}
