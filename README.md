@@ -35,7 +35,7 @@ The workspace provided in the SFND classroom comes preinstallated with everythin
    git clone https://github.com/udacity/SFND_Lidar_Obstacle_Detection.git
    ```
 
-2.  Edit [CMakeLists.txt](https://github.com/udacity/SFND_Lidar_Obstacle_Detection/blob/master/CMakeLists.txt) as follows:
+2. Edit [CMakeLists.txt](https://github.com/udacity/SFND_Lidar_Obstacle_Detection/blob/master/CMakeLists.txt) as follows:
 
    ```cmake
    cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
