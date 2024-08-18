@@ -1,0 +1,142 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "C/C++: Ensure Build Directory",
+            "type": "shell",
+            "description": "Ensures the build directory exists.",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "linux": {
+                "command": "mkdir",
+                "args": ["-p", "build"],
+                "label": "Ensure Build Directory (Linux)",
+                "detail": "Ensures the build directory exists on Linux.",
+                "showOutput": "always"
+            },
+            "windows": {
+                "command": "cmd.exe",
+                "args": ["/C", "if not exist build mkdir build"],
+                "label": "Ensure Build Directory (Windows)",
+                "detail": "Ensures the build directory exists on Windows."
+            }
+        },
+        {
+            "label": "C/C++: CMake Configure Debug",
+            "dependsOn": ["C/C++: Ensure Build Directory"],
+            "type": "shell",
+            "description": "Configures the C/C++ project using CMake for Debug.",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "linux": {
+                "command": "bash",
+                "args": ["-c", "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .."],
+                "label": "CMake Configure Debug (Linux)",
+                "detail": "Configures the C/C++ project using CMake for Debug on Linux.",
+                "showOutput": "always"
+            },
+            "windows": {
+                "command": "cmd.exe",
+                "args": ["/C", "cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug"],
+                "label": "CMake Configure Debug (Windows)",
+                "detail": "Configures the C/C++ project using CMake for Debug on Windows."
+            }
+        },
+        {
+            "label": "C/C++: CMake Build Debug",
+            "dependsOn": ["C/C++: CMake Configure Debug"],
+            "type": "shell",
+            "description": "Builds the C/C++ project using CMake for Debug.",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "linux": {
+                "command": "cmake",
+                "args": ["--build", "build"],
+                "label": "CMake Build Debug (Linux)",
+                "detail": "Builds the C/C++ project using CMake for Debug on Linux.",
+                "showOutput": "always"
+            },
+            "windows": {
+                "command": "cmake",
+                "args": ["--build", "build", "--config", "Debug"],
+                "label": "CMake Build Debug (Windows)",
+                "detail": "Builds the C/C++ project using CMake for Debug on Windows."
+            }
+        },
+        {
+            "label": "C/C++: CMake Configure Release",
+            "dependsOn": ["C/C++: Ensure Build Directory"],
+            "type": "shell",
+            "description": "Configures the C/C++ project using CMake for Release.",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "linux": {
+                "command": "bash",
+                "args": ["-c", "cd build && cmake -DCMAKE_BUILD_TYPE=Release .."],
+                "label": "CMake Configure Release (Linux)",
+                "detail": "Configures the C/C++ project using CMake for Release on Linux.",
+                "showOutput": "always"
+            },
+            "windows": {
+                "command": "cmd.exe",
+                "args": ["/C", "cd build && cmake .. -DCMAKE_BUILD_TYPE=Release"],
+                "label": "CMake Configure Release (Windows)",
+                "detail": "Configures the C/C++ project using CMake for Release on Windows."
+            }
+        },
+        {
+            "label": "C/C++: CMake Build Release",
+            "dependsOn": ["C/C++: CMake Configure Release"],
+            "type": "shell",
+            "description": "Builds the C/C++ project using CMake for Release.",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "linux": {
+                "command": "cmake",
+                "args": ["--build", "build"],
+                "label": "CMake Build Release (Linux)",
+                "detail": "Builds the C/C++ project using CMake for Release on Linux.",
+                "showOutput": "always"
+            },
+            "windows": {
+                "command": "cmake",
+                "args": ["--build", "build", "--config", "Release"],
+                "label": "CMake Build Release (Windows)",
+                "detail": "Builds the C/C++ project using CMake for Release on Windows."
+            }
+        },
+        {
+            "label": "C/C++: Clean Build Artifacts",
+            "description": "Removes build artifacts from the build directory.",
+            "type": "shell",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "linux": {
+                "command": "bash",
+                "args": ["-c", "rm -rf build"],
+                "label": "C/C++: Clean Build Artifacts (Linux - CMake)",
+                "detail": "Removes build artifacts from the build directory on Linux.",
+                "showOutput": "always"
+            },
+            "windows": {
+                "command": "cmd.exe",
+                "args": ["/C", "if exist build rmdir /s /q build"],
+                "label": "C/C++: Clean Build Artifacts (Windows - CMake)",
+                "detail": "Removes build artifacts from the build directory on Windows."
+            }
+        }
+    ]
+}
