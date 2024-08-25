@@ -150,3 +150,11 @@ If you get build errors related to Qt5, make sure that the path for Qt5 is corre
 [PCL Source Github](https://github.com/PointCloudLibrary/pcl)
 
 [PCL Mac Compilation Docs](https://pcl.readthedocs.io/projects/tutorials/en/latest/compiling_pcl_macosx.html#compiling-pcl-macosx)
+
+### Docker instructions 
+
+TBD:
+
+- Container GUI support for windows and Linux
+- Build docker image
+- How to run devcontainer
