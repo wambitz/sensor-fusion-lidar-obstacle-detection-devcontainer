@@ -9,14 +9,14 @@
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
 
-using sensors::lidar::Lidar;
-using render::Car;
 using render::Box;
-using render::Vect3;
+using render::CameraAngle;
+using render::Car;
 using render::Color;
 using render::renderHighway;
-using render::CameraAngle;
 using render::renderPointCloud;
+using render::Vect3;
+using sensors::lidar::Lidar;
 
 std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr &viewer)
 {
@@ -62,11 +62,29 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
     // renderPointCloud(viewer, inputCloud, "inputCloud"); // This shows the point cloud without filtering
 
     // Create point processor
-    std::shared_ptr<ProcessPointClouds<pcl::PointXYZ>> pointProcessor = std::make_shared<ProcessPointClouds<pcl::PointXYZ>>();
+    std::shared_ptr<ProcessPointClouds<pcl::PointXYZ>> pointProcessor =
+        std::make_shared<ProcessPointClouds<pcl::PointXYZ>>();
 
-    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = pointProcessor->SegmentPlane(inputCloud, 100, 0.2);
-    renderPointCloud(viewer, segmentCloud.first, "obstaclesCloud", Color(1,0,0));
-    renderPointCloud(viewer, segmentCloud.second, "planeCloud", Color(0,1,0));
+    std::pair<pcl::PointCloud<pcl::PointXYZ>::Ptr, pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud =
+        pointProcessor->SegmentPlane(inputCloud, 100, 0.2);
+    // NOTE: Comment these renders out to remove plane and non-clusterized obstacles
+    renderPointCloud(viewer, segmentCloud.first, "obstaclesCloud", Color(1, 0, 0));
+    renderPointCloud(viewer, segmentCloud.second, "planeCloud", Color(0, 1, 0));
+
+    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters =
+        pointProcessor->Clustering(segmentCloud.first, 1.0, 3, 30);
+
+    int clusterId = 0;
+    // Color(R, G, B)
+    std::vector<Color> colors = {Color(1, 0, 0), Color(1, 1, 0), Color(0, 0, 1)};
+
+    for (pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
+    {
+        std::cout << "cluster size ";
+        pointProcessor->numPoints(cluster);
+        renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId]);
+        ++clusterId;
+    }
 }
 
 // setAngle: SWITCH CAMERA ANGLE {XY, TopDown, Side, FPS}
@@ -115,6 +133,7 @@ int main(int argc, char **argv)
         // NOTE: If using Ubuntu 22.04 use this instead, this will throw an error but it will work
         // viewer->spin();
         // Alternatively, build pcl from source: https://github.com/PointCloudLibrary/pcl.git
+        // For  Ubuntu 20.04 the following works fine:
         viewer->spinOnce();
     }
 }
