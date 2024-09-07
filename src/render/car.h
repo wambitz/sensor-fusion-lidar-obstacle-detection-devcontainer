@@ -9,7 +9,7 @@ class Car
 {
 public:
     Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, std::string setName);
-    void render(pcl::visualization::PCLVisualizer::Ptr &viewer);
+    void render(pcl::visualization::PCLVisualizer::Ptr& viewer);
     bool inbetween(double point, double center, double range); // collision helper function
     bool checkCollision(Vect3 point);
 
@@ -22,4 +22,3 @@ private:
 };
 
 } // namespace render
-

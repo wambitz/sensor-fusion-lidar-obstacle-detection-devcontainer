@@ -1,10 +1,10 @@
-# pragma once
+#pragma once
 
 #include <Eigen/Geometry>
 
 namespace render
 {
-    
+
 struct BoxQ
 {
     Eigen::Vector3f bboxTransform;

@@ -18,10 +18,10 @@ Ray::Ray(Vect3 setOrigin, double horizontalAngle, double verticalAngle, double s
 {
 }
 
-void Ray::rayCast(const std::vector<Car> &cars,
+void Ray::rayCast(const std::vector<Car>& cars,
                   double minDistance,
                   double maxDistance,
-                  pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                  pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
                   double slopeAngle,
                   double sderr)
 {

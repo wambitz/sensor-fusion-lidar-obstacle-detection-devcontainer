@@ -28,10 +28,10 @@ public:
 
     ~Ray() = default;
 
-    void rayCast(const std::vector<Car> &cars,
+    void rayCast(const std::vector<Car>& cars,
                  double minDistance,
                  double maxDistance,
-                 pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+                 pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
                  double slopeAngle,
                  double sderr);
 

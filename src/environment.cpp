@@ -18,7 +18,7 @@ using render::renderPointCloud;
 using render::Vect3;
 using sensors::lidar::Lidar;
 
-std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr &viewer)
+std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
 
     Car egoCar(Vect3(0, 0, 0), Vect3(4, 2, 2), Color(0, 1, 0), "egoCar");
@@ -44,7 +44,7 @@ std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer
     return cars;
 }
 
-void simpleHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
+void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
     // ----------------------------------------------------
     // -----Open 3D viewer and display simple highway -----
@@ -88,7 +88,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
 }
 
 // setAngle: SWITCH CAMERA ANGLE {XY, TopDown, Side, FPS}
-void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr &viewer)
+void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
     viewer->setBackgroundColor(0, 0, 0);
 
@@ -119,7 +119,7 @@ void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr &vi
     }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     std::cout << "starting environment" << std::endl;
 

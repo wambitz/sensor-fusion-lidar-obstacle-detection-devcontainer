@@ -1,13 +1,12 @@
 #include "processPointClouds.h"
 #include "render/render.h"
-#include <unordered_set>
 #include <random>
+#include <unordered_set>
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
 
-using render::renderPointCloud;
 using render::Color;
-
+using render::renderPointCloud;
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData()
 {
@@ -70,14 +69,14 @@ pcl::visualization::PCLVisualizer::Ptr initScene()
 
 //     /*
 //     TODO: Fill in this function
-//     For max iterations: 
+//     For max iterations:
 //     1. Randomly sample subset and fit line
 //     2. Measure distance between every point and fitted line
 //        If distance is smaller than threshold count it as inlier
 //     3. Return indicies of inliers from fitted line with most inliers
 //     */
 
-//     while (maxIterations--) 
+//     while (maxIterations--)
 //     {
 //         std::unordered_set<int> inliers;
 //         while (inliers.size() < 2)
@@ -88,7 +87,7 @@ pcl::visualization::PCLVisualizer::Ptr initScene()
 //         auto itr = inliers.begin();
 //         float x1 = cloud->points[*itr].x;
 //         float y1 = cloud->points[*itr].y;
-        
+
 //         itr++;
 
 //         float x2 = cloud->points[*itr].x;
@@ -101,7 +100,7 @@ pcl::visualization::PCLVisualizer::Ptr initScene()
 //         for (int index = 0; index < cloud->points.size(); index++)
 //         {
 //             if (inliers.count(index) > 0)
-//             { 
+//             {
 //                 continue;
 //             }
 
@@ -139,7 +138,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(0, cloud->points.size() - 1);
 
-    while (maxIterations--) 
+    while (maxIterations--)
     {
         std::unordered_set<int> inliers;
         while (inliers.size() < 2)
@@ -150,7 +149,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
         auto itr = inliers.begin();
         float x1 = cloud->points[*itr].x;
         float y1 = cloud->points[*itr].y;
-        
+
         itr++;
         float x2 = cloud->points[*itr].x;
         float y2 = cloud->points[*itr].y;
@@ -162,7 +161,7 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
         for (int index = 0; index < cloud->points.size(); ++index)
         {
             if (inliers.count(index) > 0)
-            { 
+            {
                 continue;
             }
 
@@ -190,7 +189,6 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 
     return inliersResult;
 }
-
 
 int main()
 {

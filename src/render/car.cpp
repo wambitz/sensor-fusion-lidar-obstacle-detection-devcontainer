@@ -11,7 +11,7 @@ Car::Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, std::string set
 {
 }
 
-void Car::render(pcl::visualization::PCLVisualizer::Ptr &viewer)
+void Car::render(pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
     // render bottom of car
     viewer->addCube(position.x - dimensions.x / 2,
@@ -60,12 +60,10 @@ bool Car::inbetween(double point, double center, double range)
 
 bool Car::checkCollision(Vect3 point)
 {
-    return (inbetween(point.x, position.x, dimensions.x / 2) &&
-            inbetween(point.y, position.y, dimensions.y / 2) &&
+    return (inbetween(point.x, position.x, dimensions.x / 2) && inbetween(point.y, position.y, dimensions.y / 2) &&
             inbetween(point.z, position.z + dimensions.z / 3, dimensions.z / 3)) ||
-           (inbetween(point.x, position.x, dimensions.x / 4) &&
-            inbetween(point.y, position.y, dimensions.y / 2) &&
+           (inbetween(point.x, position.x, dimensions.x / 4) && inbetween(point.y, position.y, dimensions.y / 2) &&
             inbetween(point.z, position.z + dimensions.z * 5 / 6, dimensions.z / 6));
 }
 
-} // namespace render 
+} // namespace render

@@ -3,7 +3,7 @@
 namespace render
 {
 
-void renderHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
+void renderHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
     // units in meters
     double roadLength = 50.0;
@@ -43,9 +43,9 @@ void renderHighway(pcl::visualization::PCLVisualizer::Ptr &viewer)
 
 int countRays = 0;
 
-void renderRays(pcl::visualization::PCLVisualizer::Ptr &viewer,
-                const Vect3 &origin,
-                const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
+void renderRays(pcl::visualization::PCLVisualizer::Ptr& viewer,
+                const Vect3& origin,
+                const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud)
 {
     for (pcl::PointXYZ point : cloud->points)
     {
@@ -54,7 +54,7 @@ void renderRays(pcl::visualization::PCLVisualizer::Ptr &viewer,
     }
 }
 
-void clearRays(pcl::visualization::PCLVisualizer::Ptr &viewer)
+void clearRays(pcl::visualization::PCLVisualizer::Ptr& viewer)
 {
     while (countRays)
     {
@@ -63,8 +63,8 @@ void clearRays(pcl::visualization::PCLVisualizer::Ptr &viewer)
     }
 }
 
-void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr &viewer,
-                      const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud,
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer,
+                      const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
                       std::string name,
                       Color color)
 {
@@ -73,8 +73,8 @@ void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr &viewer,
     viewer->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, color.r, color.g, color.b, name);
 }
 
-void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr &viewer,
-                      const pcl::PointCloud<pcl::PointXYZI>::Ptr &cloud,
+void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer,
+                      const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud,
                       std::string name,
                       Color color)
 {
@@ -100,7 +100,7 @@ void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr &viewer,
 }
 
 // Draw wire frame box with filled transparent color
-void renderBox(pcl::visualization::PCLVisualizer::Ptr &viewer, Box box, int id, Color color, float opacity)
+void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, Box box, int id, Color color, float opacity)
 {
     if (opacity > 1.0)
     {
@@ -142,7 +142,7 @@ void renderBox(pcl::visualization::PCLVisualizer::Ptr &viewer, Box box, int id, 
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity * 0.3, cubeFill);
 }
 
-void renderBox(pcl::visualization::PCLVisualizer::Ptr &viewer, BoxQ box, int id, Color color, float opacity)
+void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id, Color color, float opacity)
 {
     if (opacity > 1.0)
     {
@@ -171,6 +171,4 @@ void renderBox(pcl::visualization::PCLVisualizer::Ptr &viewer, BoxQ box, int id,
     viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY, opacity * 0.3, cubeFill);
 }
 
-
 } // namespace render
-

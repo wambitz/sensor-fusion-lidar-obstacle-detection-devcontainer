@@ -1,5 +1,5 @@
 // PCL lib Functions for processing point clouds
-# pragma once
+#pragma once
 
 #include "box.h"
 
@@ -14,11 +14,11 @@
 #include <pcl/segmentation/extract_clusters.h>
 #include <pcl/segmentation/sac_segmentation.h>
 
-#include <string>
-#include <vector>
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <string>
+#include <vector>
 
 using render::Box;
 

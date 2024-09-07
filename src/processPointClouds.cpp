@@ -28,11 +28,11 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(Po
 }
 
 template <typename PointT>
-std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> 
-ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, PointCloudPtr cloud)
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<
+    PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, PointCloudPtr cloud)
 {
     // TODO: Create two new point clouds, one cloud with obstacles and other with segmented plane
-    
+
     // // Create the filtering object
     // pcl::ExtractIndices<pcl::PointXYZ> extract;
 
@@ -54,22 +54,21 @@ ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, Point
     //     extract.setIndices (inliers);
     //     extract.setNegative (false);
     //     extract.filter (*cloud_p);
-    //     std::cerr << "PointCloud representing the planar component: " << cloud_p->width * cloud_p->height << " data points." << std::endl;
-
-
+    //     std::cerr << "PointCloud representing the planar component: " << cloud_p->width * cloud_p->height << " data
+    //     points." << std::endl;
 
     //     // Create the filtering object
     //     extract.setNegative (true);
     //     extract.filter (*cloud_f);
     //     cloud_filtered.swap (cloud_f);
     //     i++;
-    // } 
+    // }
 
     using PointCloudPtr = typename pcl::PointCloud<PointT>::Ptr;
     PointCloudPtr obstaclesCloud = boost::make_shared<pcl::PointCloud<PointT>>();
     PointCloudPtr planeCloud = boost::make_shared<pcl::PointCloud<PointT>>();
 
-    for (const auto & index : inliers->indices)
+    for (const auto& index : inliers->indices)
     {
         planeCloud->points.push_back(cloud->points[index]);
     }
@@ -82,13 +81,13 @@ ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, Point
 
     // std::pair<PointCloudPtr, PointCloudPtr> segResult(cloud, cloud);
     std::pair<PointCloudPtr, PointCloudPtr> segResult(obstaclesCloud, planeCloud);
-    
+
     return segResult;
 }
 
 template <typename PointT>
-std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> 
-ProcessPointClouds<PointT>::SegmentPlane(PointCloudPtr cloud, int maxIterations, float distanceThreshold)
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<
+    PointT>::SegmentPlane(PointCloudPtr cloud, int maxIterations, float distanceThreshold)
 {
     // Time segmentation process
     auto startTime = std::chrono::steady_clock::now();
@@ -100,21 +99,20 @@ ProcessPointClouds<PointT>::SegmentPlane(PointCloudPtr cloud, int maxIterations,
     typename pcl::ModelCoefficients::Ptr coefficients = boost::make_shared<pcl::ModelCoefficients>();
     typename pcl::PointIndices::Ptr inliers = boost::make_shared<pcl::PointIndices>();
 
-
     // Create the segmentation object
     pcl::SACSegmentation<pcl::PointXYZ> seg;
     // Optional
-    seg.setOptimizeCoefficients (true);
+    seg.setOptimizeCoefficients(true);
     // Mandatory
     seg.setModelType(pcl::SACMODEL_PLANE);
     seg.setMethodType(pcl::SAC_RANSAC);
     seg.setMaxIterations(maxIterations);
-    seg.setDistanceThreshold (distanceThreshold);
+    seg.setDistanceThreshold(distanceThreshold);
 
     seg.setInputCloud(cloud);
     seg.segment(*inliers, *coefficients);
 
-    if (inliers->indices.size () == 0)
+    if (inliers->indices.size() == 0)
     {
         std::cerr << "Could not estimate a planar model for the given dataset." << std::endl;
     }
@@ -122,7 +120,7 @@ ProcessPointClouds<PointT>::SegmentPlane(PointCloudPtr cloud, int maxIterations,
     auto endTime = std::chrono::steady_clock::now();
 
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
-    std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl; 
+    std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
 
     std::pair<PointCloudPtr, PointCloudPtr> segResult = SeparateClouds(inliers, cloud);
     return segResult;
@@ -146,20 +144,21 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
 
     std::vector<pcl::PointIndices> clusterIndices;
     pcl::EuclideanClusterExtraction<PointT> ec;
-    ec.setClusterTolerance (clusterTolerance); // 1.0f -> 1m
-    ec.setMinClusterSize (minSize); // 3 points
-    ec.setMaxClusterSize (maxSize); // 30 points
-    ec.setSearchMethod (tree);
-    ec.setInputCloud (cloud);
-    ec.extract (clusterIndices);
+    ec.setClusterTolerance(clusterTolerance); // 1.0f -> 1m
+    ec.setMinClusterSize(minSize);            // 3 points
+    ec.setMaxClusterSize(maxSize);            // 30 points
+    ec.setSearchMethod(tree);
+    ec.setInputCloud(cloud);
+    ec.extract(clusterIndices);
 
     for (const pcl::PointIndices& cluster : clusterIndices)
     {
         typename pcl::PointCloud<PointT>::Ptr cloudCluster = boost::make_shared<pcl::PointCloud<PointT>>();
 
-        for (const int& idx : cluster.indices) {
+        for (const int& idx : cluster.indices)
+        {
             cloudCluster->points.push_back(cloud->points[idx]);
-        } 
+        }
 
         cloudCluster->width = cloudCluster->size();
         cloudCluster->height = 1;
