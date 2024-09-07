@@ -158,3 +158,24 @@ TBD:
 - Container GUI support for windows and Linux
 - Build docker image
 - How to run devcontainer
+
+### Using Clang Format
+
+Format a Single File: If you want to test it on a single file, you can run:
+
+```bash
+clang-format -i path/to/your/file.cpp
+```
+
+Format All Files in a Directory: To format all files in a directory recursively, you can use find combined with clang-format. For example, to format all .cpp, .hpp, .c, and .h files, use:
+
+```bash
+find . -iname "*.cpp" -o -iname "*.hpp" -o -iname "*.c" -o -iname "*.h" | xargs clang-format -i
+```
+
+
+Format Only Modified Files (for Git): If you only want to format files that have been modified in a Git repository, you can use:
+
+```
+git diff --name-only --diff-filter=d | grep -E '\.(cpp|hpp|c|h)$' | xargs clang-format -i
+```
