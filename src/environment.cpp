@@ -52,6 +52,8 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 
     // RENDER OPTIONS
     bool renderScene = false; // True will display the highway and the cars
+    bool render_clusters = true; // True will display the clusters found with KD-Tree
+    bool render_box = true; // True will add bounding box around the clusters
     std::vector<Car> cars = initHighway(renderScene, viewer);
 
     // Create lidar sensor
@@ -80,9 +82,17 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 
     for (pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
     {
-        std::cout << "cluster size ";
-        pointProcessor->numPoints(cluster);
-        renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId]);
+        if(render_clusters)
+        {
+            std::cout << "cluster size ";
+            pointProcessor->numPoints(cluster);
+            renderPointCloud(viewer, cluster, "obstCloud" + std::to_string(clusterId), colors[clusterId]);
+        }
+        if (render_box)
+        {
+            Box box = pointProcessor->BoundingBox(cluster);
+            renderBox(viewer, box, clusterId);
+        }
         ++clusterId;
     }
 }
