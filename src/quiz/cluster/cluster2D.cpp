@@ -1,12 +1,13 @@
+#include "kdtree.h"
 #include "render/box.h"
 #include "render/render.h"
-#include "kdtree.h"
 #include <chrono>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
-using render::renderPointCloud;
 using render::Box;
 using render::Color;
+using render::renderPointCloud;
 
 // Arguments:
 // window is the region to draw box around
@@ -19,7 +20,17 @@ pcl::visualization::PCLVisualizer::Ptr initScene(Box window, int zoom)
     viewer->setCameraPosition(0, 0, zoom, 0, 1, 0);
     viewer->addCoordinateSystem(1.0);
 
-    viewer->addCube(window.x_min, window.x_max, window.y_min, window.y_max, 0, 0, 1, 1, 1, "window");
+    viewer->addCube(window.x_min, window.x_max, window.y_min, window.y_max, 0, 0, 0.2, 0.2, 0.2, "window");
+
+    // Set the color of the cube to red using shape rendering properties (r = 1.0, g = 0.0, b = 0.0)
+    // viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_COLOR, 1.0, 0.0, 0.0, "window");  // Red
+    // cube
+
+    // Set transparency if needed (optional)
+    viewer->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_OPACITY,
+                                        0.2,
+                                        "window"); // Make it 20% opaque
+
     return viewer;
 }
 
@@ -42,17 +53,17 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData(std::vector<std::vector<float>> p
     return cloud;
 }
 
-void render2DTree(Node *node,
-                  pcl::visualization::PCLVisualizer::Ptr &viewer,
+void render2DTree(boost::shared_ptr<Node> node,
+                  pcl::visualization::PCLVisualizer::Ptr& viewer,
                   Box window,
-                  int &iteration,
+                  int& iteration,
                   uint depth = 0)
 {
-
     if (node != NULL)
     {
         Box upperWindow = window;
         Box lowerWindow = window;
+
         // split on x axis
         if (depth % 2 == 0)
         {
@@ -60,7 +71,7 @@ void render2DTree(Node *node,
                             pcl::PointXYZ(node->point[0], window.y_max, 0),
                             0,
                             0,
-                            1,
+                            1, // Blue color for the line
                             "line" + std::to_string(iteration));
             lowerWindow.x_max = node->point[0];
             upperWindow.x_min = node->point[0];
@@ -70,7 +81,7 @@ void render2DTree(Node *node,
         {
             viewer->addLine(pcl::PointXYZ(window.x_min, node->point[1], 0),
                             pcl::PointXYZ(window.x_max, node->point[1], 0),
-                            1,
+                            1, // Red color for the line
                             0,
                             0,
                             "line" + std::to_string(iteration));
@@ -84,14 +95,50 @@ void render2DTree(Node *node,
     }
 }
 
-std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>> &points,
-                                               KdTree *tree,
-                                               float distanceTol)
+void clusterHelper(int indice,
+                   const std::vector<std::vector<float>> points,
+                   std::vector<int>& cluster,
+                   std::vector<bool>& processed,
+                   boost::shared_ptr<KdTree> tree,
+                   float distanceTolerance)
+{
+    processed[indice] = true;
+    cluster.push_back(indice);
+
+    std::vector<int> nearest = tree->search(points[indice], distanceTolerance);
+    for (int id: nearest)
+    {
+        if(!processed[id])
+        {
+            clusterHelper(id, points, cluster, processed, tree, distanceTolerance);
+        }
+    }
+}
+
+std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points,
+                                               boost::shared_ptr<KdTree> tree,
+                                               float distanceTolerance)
 {
 
     // TODO: Fill out this function to return list of indices for each cluster
 
     std::vector<std::vector<int>> clusters;
+    std::vector<bool> processed(points.size(), false);
+
+    int i = 0;
+    while (i < points.size())
+    {
+        if (processed[i])
+        {
+            i++;
+            continue;
+        }
+
+        std::vector<int> cluster;
+        clusterHelper(i, points, cluster, processed, tree, distanceTolerance);
+        clusters.push_back(cluster);
+        i++;
+    }
 
     return clusters;
 }
@@ -121,13 +168,16 @@ int main()
                                               {1.7, -6.9},
                                               {-1.2, -7.2},
                                               {2.2, -8.9}};
+
     // std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3} };
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData(points);
 
-    KdTree *tree = new KdTree;
+    boost::shared_ptr<KdTree> tree(new KdTree);
 
     for (int i = 0; i < points.size(); i++)
+    {
         tree->insert(points[i], i);
+    }
 
     int it = 0;
     render2DTree(tree->root, viewer, window, it);
@@ -152,17 +202,23 @@ int main()
 
     // Render clusters
     int clusterId = 0;
-    std::vector<Color> colors = {Color(1, 0, 0), Color(0, 1, 0), Color(0, 0, 1)};
+    std::vector<Color> colors = {Color(1, 0, 0), Color(1, 1, 0), Color(0, 0, 1)};
+
     for (std::vector<int> cluster : clusters)
     {
         pcl::PointCloud<pcl::PointXYZ>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZ>());
         for (int indice : cluster)
+        {
             clusterCloud->points.push_back(pcl::PointXYZ(points[indice][0], points[indice][1], 0));
+        }
         renderPointCloud(viewer, clusterCloud, "cluster" + std::to_string(clusterId), colors[clusterId % 3]);
         ++clusterId;
     }
+
     if (clusters.size() == 0)
+    {
         renderPointCloud(viewer, cloud, "data");
+    }
 
     while (!viewer->wasStopped())
     {

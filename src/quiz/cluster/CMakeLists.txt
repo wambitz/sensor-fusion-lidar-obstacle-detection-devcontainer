@@ -36,8 +36,12 @@ add_definitions(${PCL_DEFINITIONS})
 # Remove potentially problematic PCL library
 list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 
-add_executable (cluster cluster.cpp ../../render/render.cpp)
-target_link_libraries (cluster ${PCL_LIBRARIES})
+# Add source files to the executable
+add_executable (cluster2D cluster2D.cpp ../../render/render.cpp)
+add_executable (cluster3D cluster3D.cpp ../../render/render.cpp)
+
+target_link_libraries (cluster2D ${PCL_LIBRARIES})
+target_link_libraries (cluster3D ${PCL_LIBRARIES})
 
 
 
