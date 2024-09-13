@@ -30,5 +30,8 @@ RUN useradd -m user && \
 # Use sed to uncomment the force_color_prompt line in ~/.bashrc
 RUN sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' /home/user/.bashrc
 
+# Switch to the 'user' you created
+USER user
+
 # Default command
 CMD ["/bin/bash"]
