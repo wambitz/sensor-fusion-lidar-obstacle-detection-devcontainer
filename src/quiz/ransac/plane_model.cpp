@@ -15,9 +15,9 @@ void PlaneModel::fit(const std::vector<pcl::PointXYZ>& points)
     float y3 = points[2].y;
     float z3 = points[2].z;
 
-    float i = (y2 - y1)*(z3 - z1) - (z2 - z1)*(y3 - y1);
-    float j = (z2 - z1)*(x3 - x1) - (x2 - x1)*(z3 - z1);
-    float k = (x2 - x1)*(y3 - y1) - (y2 - y1)*(x3 - x1);
+    float i = (y2 - y1) * (z3 - z1) - (z2 - z1) * (y3 - y1);
+    float j = (z2 - z1) * (x3 - x1) - (x2 - x1) * (z3 - z1);
+    float k = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
 
     a_ = i;
     b_ = j;
@@ -33,7 +33,4 @@ float PlaneModel::distance(const pcl::PointXYZ& point) const
     return std::fabs(a_ * x + b_ * y + c_ * z + d_) / std::sqrt(a_ * a_ + b_ * b_ + c_ * c_);
 }
 
-int PlaneModel::requiredSamples() const
-{
-    return 3;
-}
+int PlaneModel::requiredSamples() const { return 3; }

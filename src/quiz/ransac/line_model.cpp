@@ -20,7 +20,4 @@ float LineModel::distance(const pcl::PointXYZ& point) const
     return std::fabs(a_ * x + b_ * y + c_) / std::sqrt(a_ * a_ + b_ * b_);
 }
 
-int LineModel::requiredSamples() const
-{
-    return 2;
-}
+int LineModel::requiredSamples() const { return 2; }

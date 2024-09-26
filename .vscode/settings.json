@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.cpp": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "thread": "cpp"
+    }
+}

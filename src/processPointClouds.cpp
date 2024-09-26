@@ -3,7 +3,6 @@
 #include "processPointClouds.h"
 #include <boost/make_shared.hpp>
 
-
 template <typename PointT>
 void ProcessPointClouds<PointT>::numPoints(PointCloudPtr cloud)
 {
@@ -23,12 +22,12 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(Po
     pcl::VoxelGrid<PointT> vg;
     typename pcl::PointCloud<PointT>::Ptr cloudFiltered = boost::make_shared<pcl::PointCloud<PointT>>();
 
-    //std::cout << typeid(vg).name() << endl;
+    // std::cout << typeid(vg).name() << endl;
     vg.setInputCloud(cloud);
     vg.setLeafSize(filterRes, filterRes, filterRes);
     vg.filter(*cloudFiltered);
 
-    typename pcl::PointCloud<PointT>::Ptr cloudRegion =  boost::make_shared<pcl::PointCloud<PointT>>();
+    typename pcl::PointCloud<PointT>::Ptr cloudRegion = boost::make_shared<pcl::PointCloud<PointT>>();
 
     pcl::CropBox<PointT> region(true);
     region.setMin(minPoint);
@@ -46,7 +45,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(Po
 
     pcl::PointIndices::Ptr inliers = boost::make_shared<pcl::PointIndices>();
 
-    for (const auto& point: indices) 
+    for (const auto& point : indices)
     {
         inliers->indices.push_back(point);
     }

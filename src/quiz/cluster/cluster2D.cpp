@@ -1,9 +1,9 @@
 #include "kdtree.h"
 #include "render/box.h"
 #include "render/render.h"
+#include <boost/shared_ptr.hpp>
 #include <chrono>
 #include <string>
-#include <boost/shared_ptr.hpp>
 
 using render::Box;
 using render::Color;
@@ -106,9 +106,9 @@ void clusterHelper(int indice,
     cluster.push_back(indice);
 
     std::vector<int> nearest = tree->search(points[indice], distanceTolerance);
-    for (int id: nearest)
+    for (int id : nearest)
     {
-        if(!processed[id])
+        if (!processed[id])
         {
             clusterHelper(id, points, cluster, processed, tree, distanceTolerance);
         }

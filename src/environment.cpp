@@ -51,9 +51,9 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
     // ----------------------------------------------------
 
     // RENDER OPTIONS
-    bool renderScene = false; // True will display the highway and the cars
+    bool renderScene = false;    // True will display the highway and the cars
     bool render_clusters = true; // True will display the clusters found with KD-Tree
-    bool render_box = true; // True will add bounding box around the clusters
+    bool render_box = true;      // True will add bounding box around the clusters
     std::vector<Car> cars = initHighway(renderScene, viewer);
 
     // Create lidar sensor
@@ -82,7 +82,7 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
 
     for (pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
     {
-        if(render_clusters)
+        if (render_clusters)
         {
             std::cout << "cluster size ";
             pointProcessor->numPoints(cluster);
@@ -103,10 +103,11 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr& viewer)
     // -----Open 3D viewer and display City Block     -----
     // ----------------------------------------------------
 
-    std::unique_ptr<ProcessPointClouds<pcl::PointXYZI>> pointProcessorI = std::make_unique<ProcessPointClouds<pcl::PointXYZI>>();
-    pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = pointProcessorI->loadPcd("../src/sensors/data/pcd/data_1/0000000000.pcd");
+    std::unique_ptr<ProcessPointClouds<pcl::PointXYZI>> pointProcessorI =
+        std::make_unique<ProcessPointClouds<pcl::PointXYZI>>();
+    pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud =
+        pointProcessorI->loadPcd("../src/sensors/data/pcd/data_1/0000000000.pcd");
     renderPointCloud(viewer, inputCloud, "inputCloud");
-
 }
 
 // setAngle: SWITCH CAMERA ANGLE {XY, TopDown, Side, FPS}

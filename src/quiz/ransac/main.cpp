@@ -1,10 +1,10 @@
 // main.cpp
 
-#include "processPointClouds.h"
-#include "render/render.h"
-#include "ransac.h"
 #include "line_model.h"
 #include "plane_model.h"
+#include "processPointClouds.h"
+#include "ransac.h"
+#include "render/render.h"
 #include <random>
 #include <unordered_set>
 
