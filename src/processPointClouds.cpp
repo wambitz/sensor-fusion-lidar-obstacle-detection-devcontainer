@@ -3,6 +3,7 @@
 #include "processPointClouds.h"
 #include <boost/make_shared.hpp>
 
+
 template <typename PointT>
 void ProcessPointClouds<PointT>::numPoints(PointCloudPtr cloud)
 {
@@ -19,19 +20,55 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(Po
     auto startTime = std::chrono::steady_clock::now();
 
     // TODO:: Fill in the function to do voxel grid point reduction and region based filtering
+    pcl::VoxelGrid<PointT> vg;
+    typename pcl::PointCloud<PointT>::Ptr cloudFiltered = boost::make_shared<pcl::PointCloud<PointT>>();
+
+    //std::cout << typeid(vg).name() << endl;
+    vg.setInputCloud(cloud);
+    vg.setLeafSize(filterRes, filterRes, filterRes);
+    vg.filter(*cloudFiltered);
+
+    typename pcl::PointCloud<PointT>::Ptr cloudRegion =  boost::make_shared<pcl::PointCloud<PointT>>();
+
+    pcl::CropBox<PointT> region(true);
+    region.setMin(minPoint);
+    region.setMax(maxPoint);
+    region.setInputCloud(cloudFiltered);
+    region.filter(*cloudRegion);
+
+    std::vector<int> indices;
+
+    pcl::CropBox<PointT> roof(true);
+    roof.setMin(Eigen::Vector4f(-1.5, -1.7, -1, 1));
+    roof.setMax(Eigen::Vector4f(2.6, 1.7, -0.4, 1));
+    roof.setInputCloud(cloudRegion);
+    roof.filter(indices);
+
+    pcl::PointIndices::Ptr inliers = boost::make_shared<pcl::PointIndices>();
+
+    for (const auto& point: indices) 
+    {
+        inliers->indices.push_back(point);
+    }
+
+    pcl::ExtractIndices<PointT> extract;
+    extract.setInputCloud(cloudRegion);
+    extract.setIndices(inliers);
+    extract.setNegative(true);
+    extract.filter(*cloudRegion);
 
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
     std::cout << "filtering took " << elapsedTime.count() << " milliseconds" << std::endl;
 
-    return cloud;
+    return cloudRegion;
 }
 
 template <typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<
     PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, PointCloudPtr cloud)
 {
-    // TODO: Create two new point clouds, one cloud with obstacles and other with segmented plane
+    // NOTE: Example code from Point Cloud Library example
 
     // // Create the filtering object
     // pcl::ExtractIndices<pcl::PointXYZ> extract;
@@ -63,6 +100,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     //     cloud_filtered.swap (cloud_f);
     //     i++;
     // }
+
+    // TODO: Create two new point clouds, one cloud with obstacles and other with segmented plane
 
     using PointCloudPtr = typename pcl::PointCloud<PointT>::Ptr;
     PointCloudPtr obstaclesCloud = boost::make_shared<pcl::PointCloud<PointT>>();
