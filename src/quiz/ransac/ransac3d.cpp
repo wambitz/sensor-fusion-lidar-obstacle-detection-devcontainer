@@ -138,7 +138,7 @@ pcl::visualization::PCLVisualizer::Ptr initScene()
 //     return inliersResult;
 // }
 
-std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTolerance)
+std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTolerance)
 {
     auto startTime = std::chrono::steady_clock::now();
 
