@@ -36,8 +36,6 @@ add_definitions(${PCL_DEFINITIONS})
 list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
 
 # Add source files to the executable
-add_executable (ransac2D ransac2d.cpp ../../render/render.cpp)
-add_executable (ransac3D ransac3d.cpp ../../render/render.cpp)
+add_executable (ransac main.cpp line_model.cpp plane_model.cpp ../../render/render.cpp)
 
-target_link_libraries (ransac2D ${PCL_LIBRARIES} ${Boost_LIBRARIES})
-target_link_libraries (ransac3D ${PCL_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries (ransac ${PCL_LIBRARIES} ${Boost_LIBRARIES})
